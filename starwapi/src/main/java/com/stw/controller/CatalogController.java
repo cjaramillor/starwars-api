@@ -63,7 +63,11 @@ public class CatalogController {
     public List<VehicleDto> filmVehicles(@PathVariable long id) { 
         return service.filmVehicles(id); 
     }
-
+    
+    @GetMapping("/films/{id}/starships") 
+    public List<StarshipDto> filmStarships(@PathVariable long id) { 
+        return service.filmStarships(id); 
+    }
 
     
 }

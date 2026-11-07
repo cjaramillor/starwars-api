@@ -92,6 +92,11 @@ public class CatalogService {
         return map(film.vehicles, VehicleDto::from); 
     }
 
+    public List<StarshipDto> filmStarships(long id) { 
+        FilmEntity film = films.findById(id).orElseThrow(ApiException::notFound);
+        return map(film.starships, StarshipDto::from); 
+    }
+
     private <T> Specification<T> named(String name) {
         return new Specification<T>() {
             @Override
