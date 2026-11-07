@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stw.dto.CatalogDto.CharacterDto;
+import com.stw.dto.CatalogDto.FilmDto;
 import com.stw.dto.CatalogDto.PageDto;
+import com.stw.dto.CatalogDto.StarshipDto;
+import com.stw.dto.CatalogDto.VehicleDto;
 import com.stw.service.CatalogService;
 
 @RestController 
@@ -36,6 +39,30 @@ public class CatalogController {
         return service.character(id); 
     }
 
+    @GetMapping("/characters/{id}/films") 
+    public List<FilmDto> characterFilms(@PathVariable long id) { 
+        return service.characterFilms(id); 
+    }
+    
+    @GetMapping("/characters/{id}/vehicles") 
+    public List<VehicleDto> characterVehicles(@PathVariable long id) { 
+        return service.characterVehicles(id); 
+    }
+    
+    @GetMapping("/characters/{id}/starships") 
+    public List<StarshipDto> characterStarships(@PathVariable long id) { 
+        return service.characterStarships(id); 
+    }
+
+    @GetMapping("/films/{id}/characters") 
+    public List<CharacterDto> filmCharacters(@PathVariable long id) { 
+        return service.filmCharacters(id);
+    }
+    
+    @GetMapping("/films/{id}/vehicles") 
+    public List<VehicleDto> filmVehicles(@PathVariable long id) { 
+        return service.filmVehicles(id); 
+    }
 
 
     

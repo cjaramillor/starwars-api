@@ -33,4 +33,37 @@ public class CatalogDto {
             return new PageDto<>(p.getContent(), p.getNumber(), p.getSize(), p.getTotalElements(), p.getTotalPages()); 
         }
     }
+
+    public record FilmDto(
+        Long id, 
+        String title,
+        int episodeId, 
+        String director, 
+        LocalDate releaseDate, 
+        String openingCrawl) {
+        public static FilmDto from(FilmEntity e) { 
+            return new FilmDto(e.id, e.name, e.episodeId, e.director, e.releaseDate, e.openingCrawl); 
+        }
+    }
+
+    public record VehicleDto(
+        Long id, 
+        String name, 
+        String model, 
+        String manufacturer, 
+        String vehicleClass) {
+        public static VehicleDto from(VehicleEntity e) { 
+            return new VehicleDto(e.id, e.name, e.model, e.manufacturer, e.vehicleClass); 
+        }
+    }
+    public record StarshipDto(
+        Long id, 
+        String name, 
+        String model, 
+        String manufacturer, 
+        String starshipClass) {
+        public static StarshipDto from(StarshipEntity e) { 
+            return new StarshipDto(e.id, e.name, e.model, e.manufacturer, e.starshipClass); }
+    }
+
 }
