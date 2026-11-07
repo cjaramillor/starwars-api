@@ -3,6 +3,7 @@ package com.stw.service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -22,6 +24,7 @@ import com.stw.dto.AuthDto.Token;
 import com.stw.entities.UserEntity;
 import com.stw.repository.UserRepository;
 
+@Service
 public class AuthService {
 
     private final UserRepository repository;
@@ -46,6 +49,7 @@ public class AuthService {
 
     @Transactional 
     public RegisterUser register(Credentials request){
+        validatePassword(request.password());
         String username = request.username().toLowerCase(Locale.ROOT);
         if(repository.existsByUsername(username)){
             throw new ApiException(HttpStatus.CONFLICT, "El usuario ya existe.");
@@ -58,8 +62,9 @@ public class AuthService {
         return new RegisterUser(user.id, user.username, user.role);
     }
 
-    @Transactional 
+    @Transactional(readOnly = true)
     public Token login(Credentials request){
+        validatePassword(request.password());
         UserEntity user = repository.findByUsername(request.username().toLowerCase(Locale.ROOT)).orElse(null);
         boolean match = passwords.matches(request.password(), user == null ? dummy : user.passwordHash);
         if(user == null || !match){
@@ -76,5 +81,11 @@ public class AuthService {
         .claim("role", user.role.name()).build();
         String token = encoder.encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(),claims)).getTokenValue();
         return new Token(token, "Bearer", expire);
+    }
+
+    private void validatePassword(String password) {
+        if (password.getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "La contraseña no puede superar 72 bytes UTF-8");
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.stw.commons;
 
-import java.nio.file.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
+@RestControllerAdvice
 public class ExceptionHandlerService {
     private static final Logger log = LoggerFactory.getLogger(ExceptionHandlerService.class);
     
@@ -34,6 +36,7 @@ public class ExceptionHandlerService {
             MethodArgumentNotValidException.class, 
             ConstraintViolationException.class,
             HandlerMethodValidationException.class, 
+            HttpMessageNotReadableException.class,
             IllegalArgumentException.class
         })
     ResponseEntity<ApiError> badRequest(Exception ex, HttpServletRequest req) {
@@ -43,6 +46,16 @@ public class ExceptionHandlerService {
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiError> forbidden(Exception ex, HttpServletRequest req) {
         return error(HttpStatus.FORBIDDEN, "Sin permisos", req); 
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<ApiError> conflict(Exception ex, HttpServletRequest req) {
+        return error(HttpStatus.CONFLICT, "Los datos entran en conflicto con un registro existente", req);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    ResponseEntity<ApiError> method(Exception ex, HttpServletRequest req) {
+        return error(HttpStatus.METHOD_NOT_ALLOWED, "Método HTTP no permitido", req);
     }
     
     @ExceptionHandler(NoResourceFoundException.class)

@@ -10,6 +10,7 @@ public class AuthDto {
     private AuthDto() {}
     public record Credentials(
         @NotBlank 
+        @Pattern(regexp = "[a-zA-Z0-9._-]{3,50}")
         String username,
         @NotBlank 
         @Size(min = 10, max = 72) 
