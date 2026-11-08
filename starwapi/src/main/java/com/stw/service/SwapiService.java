@@ -1,6 +1,6 @@
 package com.stw.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.stw.commons.ApiException;
 import com.stw.client.SwapiFeignClient;
 import feign.FeignException;

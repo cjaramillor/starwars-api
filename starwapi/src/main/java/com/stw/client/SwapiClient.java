@@ -1,6 +1,6 @@
 package com.stw.client;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.stw.service.SwapiService;
 import org.springframework.stereotype.Component;
 import java.net.URI;
